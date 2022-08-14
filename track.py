@@ -45,7 +45,7 @@ VID_FORMATS = 'asf', 'avi', 'gif', 'm4v', 'mkv', 'mov', 'mp4', 'mpeg', 'mpg', 't
 @torch.no_grad()
 def run(
         source='0',
-        yolo_weights=WEIGHTS / 'yolov5m.pt',  # model.pt path(s),
+        yolo_weights=WEIGHTS / 'yolov5.pt',  # model.pt path(s),
         strong_sort_weights=WEIGHTS / 'osnet_x0_25_msmt17.pt',  # model.pt path,
         config_strongsort=ROOT / 'strong_sort/configs/strong_sort.yaml',
         imgsz=(640, 640),  # inference size (height, width)
@@ -140,7 +140,7 @@ def run(
         )
         strongsort_list[i].model.warmup()
     outputs = [None] * nr_sources
-    
+
     colors = [[random.randint(0, 255) for _ in range(3)] for _ in names]
 
     # Run tracking
@@ -166,7 +166,7 @@ def run(
         # Apply NMS
         pred = non_max_suppression(pred[0], conf_thres, iou_thres, classes, agnostic_nms)
         dt[2] += time_synchronized() - t3
-        
+
         # Process detections
         for i, det in enumerate(pred):  # detections per image
             seen += 1
@@ -219,7 +219,7 @@ def run(
                 # draw boxes for visualization
                 if len(outputs[i]) > 0:
                     for j, (output, conf) in enumerate(zip(outputs[i], confs)):
-    
+
                         bboxes = output[0:4]
                         id = output[4]
                         cls = output[5]
@@ -289,7 +289,7 @@ def parse_opt():
     parser.add_argument('--yolo-weights', nargs='+', type=str, default=WEIGHTS / 'yolov7.pt', help='model.pt path(s)')
     parser.add_argument('--strong-sort-weights', type=str, default=WEIGHTS / 'osnet_x0_25_msmt17.pt')
     parser.add_argument('--config-strongsort', type=str, default='strong_sort/configs/strong_sort.yaml')
-    parser.add_argument('--source', type=str, default='0', help='file/dir/URL/glob, 0 for webcam')  
+    parser.add_argument('--source', type=str, default='0', help='file/dir/URL/glob, 0 for webcam')
     parser.add_argument('--imgsz', '--img', '--img-size', nargs='+', type=int, default=[640], help='inference size h,w')
     parser.add_argument('--conf-thres', type=float, default=0.5, help='confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.5, help='NMS IoU threshold')
